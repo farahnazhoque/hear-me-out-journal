@@ -1,0 +1,41 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Journal</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-button (click)="startRecording()" expand="full" [disabled]="recording">
+    Start
+  </ion-button>
+  <ion-button (click)="stopRecording()" expand="full" [disabled]="!recording">
+    Stop
+  </ion-button>
+
+  <!-- Display the duration here -->
+  <div *ngIf="recording">
+    <p>Recording: {{ calculateDuration() }}</p>
+  </div>
+
+  <ion-list>
+    <ion-item *ngFor="let file of storedFiles">
+      <ion-label>
+        {{ file.name }} - Duration: {{ file.duration }}
+      </ion-label>
+      <ion-button fill="clear" slot="end" (click)="playFile(file)">
+        <ion-icon name="play"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" slot="end" (click)="pauseFile(file)">
+        <ion-icon name="pause"></ion-icon>
+      </ion-button>
+      
+      <ion-button fill="clear" slot="end" (click)="deleteFile(file)">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+      
+    </ion-item>
+   </ion-list>
+</ion-content>

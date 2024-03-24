@@ -1,0 +1,7 @@
+{
+  "name": "hear-me-out-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
