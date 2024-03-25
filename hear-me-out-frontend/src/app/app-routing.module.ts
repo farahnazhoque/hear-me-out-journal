@@ -4,6 +4,14 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'folder/folder.module.ts',
+    pathMatch: 'full'},
+    {
+      path: 'folder/create-account',
+      loadChildren: () => import('./folder/create-account/create-account.module').then(m => m.CreateAccountPageModule)
+    },
+  {
     path: 'folder/journal',
     loadChildren: () => import('./folder/journal/journal.module').then(m => m.JournalPageModule)
   },
