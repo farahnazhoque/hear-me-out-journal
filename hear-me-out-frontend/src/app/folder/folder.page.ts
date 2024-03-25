@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef, AfterViewInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StorageService } from '../services/storage.service';
 
 @Component({
   selector: 'app-folder',
@@ -11,6 +12,7 @@ export class FolderPage implements OnInit, AfterViewInit {
   private activatedRoute = inject(ActivatedRoute);
   private el = inject(ElementRef);
   private router = inject(Router);
+  private storageService = inject(StorageService);
 
 
   constructor() {}
@@ -30,15 +32,21 @@ export class FolderPage implements OnInit, AfterViewInit {
           100% { background-position: 0% 50%; }
         }
         .inner-scroll {
-          background: linear-gradient(270deg, #2BC0E4, #EAECC6);
+          background: linear-gradient(270deg, #DAC5D8,  #E9D4E1,#EDE1D8 );
           background-size: 300% 300%;
-          animation: gradient-animation 30s ease infinite;
+          animation: gradient-animation 20s ease infinite;
         }
       `;
       ionContent.shadowRoot.appendChild(style);
     }
   }
   navigateToHome() {
-    this.router.navigate(['/folder/create-account']);
+    this.storageService.get('userName').then((userName: string | null) => {
+      if (userName) {
+        this.router.navigate(['/folder/home']);
+      } else {
+        this.router.navigate(['/folder/create-account']);
+      }
+    });
   }
 }

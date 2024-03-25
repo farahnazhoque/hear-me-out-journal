@@ -1,13 +1,10 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>create-account</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">create-account</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div style="display: flex; align-items: center;">
+    <img src="../../assets/Hear.png" alt="icon" style="height: 150px; width: 150px;"> 
+    <ion-title class="title">Create Your Account!</ion-title>
+  </div>
+  <div class="wrapper">
+    <ion-textarea class="input-box" label="Please enter your preferred First Name" labelPlacement="floating" fill="solid" placeholder="Enter text" [(ngModel)]="userName"></ion-textarea>
+    <ion-button class="save-button" expand="block" (click)="saveName()" [disabled]="!userName.trim()">Save</ion-button>
+  </div>
 </ion-content>

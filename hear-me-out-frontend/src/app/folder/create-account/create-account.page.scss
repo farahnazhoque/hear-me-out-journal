@@ -1,0 +1,46 @@
+
+ion-content::part(background) {
+    background: #EDE1D8
+    ;
+
+}
+.wrapper {
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center;
+    justify-content: center;
+  
+    padding: 10%; /* Add padding inside the wrapper */
+    padding-top: 40%;
+    margin: 0 auto; /* Center the wrapper horizontally */
+    max-width: 100%; /* Limit maximum width and center it */
+
+
+  }
+
+.title {
+    font-size: 22px;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.wrapper .input-box {
+    --background: #e5838c; /* Change #ffcccb to whatever color you prefer */
+    color: white;
+    --padding-start: 15px;
+    --padding-end: 15px;
+    --padding-top: 15px;
+    --border-radius: 2px;
+    border: 2px solid black; /* Add black solid border */
+}
+
+.wrapper .save-button {
+    margin-top: 20px; /* Add margin to the top */
+    width: 40%;
+    border-radius: 15px; /* Increase border radius for a curved border */
+    border:3px solid black; /* Border thickness and color */
+}
+
+.transparent-header {
+    --background: transparent; /* Set the background to transparent */
+}
+

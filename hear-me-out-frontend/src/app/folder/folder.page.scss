@@ -12,15 +12,15 @@ padding-top: 40%;
 }
 
 p {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: Arial, Helvetica, sans-serif	;
 }
 
 b {
-  font-family: 'Times New Roman', Times, serif;
+  font-family: Arial, Helvetica, sans-serif	;
   font-size: 200%;
-  color: #ffffba;
+  color: #6197DD;
   -webkit-text-stroke-width: 0.5px;
-  -webkit-text-stroke-color:#ffffba;
+  -webkit-text-stroke-color:#6197DD;
 }
 
 .ripple-parent {
@@ -38,11 +38,11 @@ b {
   width: 100%; /* Take full width inside the wrapper */
   height: 50px;
   border-radius: 8px;
-  background-color: #c4869e;
-  font-family: 'Times New Roman', Times, serif;
+  background-color: #F4BF42;
+  font-family: Arial, Helvetica, sans-serif	;
   margin-top: 20px; /* Add space above the button */
 }
 
 .custom-parent {
-  color: #ffffba;
+  color: black;
 }
