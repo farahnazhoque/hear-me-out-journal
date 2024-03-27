@@ -7,6 +7,12 @@
   </ion-toolbar>
 </ion-header>
 
+<ion-button size="large" class="to-folder-button" (click)="navigateToVF()">
+  My Recording <ion-icon slot="end" name="arrow-forward"></ion-icon> 
+</ion-button>
+
+
+
 <ion-content [fullscreen]="true">
   <ion-button (click)="startRecording()" expand="full" [disabled]="recording">
     Start

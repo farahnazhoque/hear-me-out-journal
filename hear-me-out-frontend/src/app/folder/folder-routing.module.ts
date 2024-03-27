@@ -19,6 +19,10 @@ const routes: Routes = [
   {
     path: 'create-account',
     loadChildren: () => import('./create-account/create-account.module').then( m => m.CreateAccountPageModule)
+  },
+  {
+    path: 'voice-folder',
+    loadChildren: () => import('./voice-folder/voice-folder.module').then( m => m.VoiceFolderPageModule)
   }
   
 ];

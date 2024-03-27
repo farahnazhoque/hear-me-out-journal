@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RecordingData, VoiceRecorder } from 'capacitor-voice-recorder';
 import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Router } from '@angular/router';
 
 interface AudioFile {
   name: string;
@@ -19,6 +20,8 @@ export class JournalPage implements OnInit {
   startTime: number | null = null;
   durationInterval: any;
   audioRef?: HTMLAudioElement; 
+  private router = inject(Router);
+
 
   constructor() { }
 
@@ -133,4 +136,7 @@ export class JournalPage implements OnInit {
     this.storedFiles = this.storedFiles.filter(f => f.name !== file.name);
   }
 
+  navigateToVF() {
+    this.router.navigate(['../voice-folder']);
+  }
 }

@@ -1,0 +1,20 @@
+<!-- file-detail-modal.component.html -->
+<ion-content>
+    <ion-list>
+      <ion-item>
+        <ion-label position="stacked">File Name</ion-label>
+        <ion-input [(ngModel)]="newFileName"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Folder</ion-label>
+        <ion-chip *ngFor="let folder of folders" (click)="selectFolder(folder)">
+          {{ folder }}
+        </ion-chip>
+        <ion-chip (click)="addNewFolder()">
+          <ion-icon name="add"></ion-icon> Add Folder
+        </ion-chip>
+      </ion-item>
+    </ion-list>
+    <ion-button (click)="saveFile()">Save</ion-button>
+  </ion-content>
+  
