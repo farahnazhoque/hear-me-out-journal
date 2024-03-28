@@ -49,11 +49,53 @@ ion-menu-button {
   
     --ripple-color: deeppink;
   
-    padding: 10px; /* Uniform padding */
+    padding: 2px; /* Uniform padding */
     width: auto; /* Adjusts width based on the text content */
     min-width: 100px; /* Minimum width for the button */
     max-width: 200px; /* Maximum width for the button */
     font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
 
   }
   
+  .horizontal-scroll {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+  
+    /* Hide scrollbar for Chrome, Safari, and Opera */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+  .horizontal-scroll .to-folder-button {
+    flex: 0 0 auto; /* Prevent buttons from shrinking */
+    margin-right: 2px; /* Space between buttons */
+  }
+  
+  .add-folder-button {
+    --background: rgb(243, 199, 117);
+    --background-hover: orange;
+    --background-activated: orange;
+    --background-focused: orange;
+  
+    --color: blue;
+    --border-radius: 20px;
+    --border-color: #000;
+    --border-style: solid;
+    --border-width: 2px;
+  
+    --box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+  
+    --ripple-color: deeppink;
+  
+    padding: 2px; /* Uniform padding */
+    width: auto; /* Adjusts width based on the text content */
+    min-width: 100px; /* Minimum width for the button */
+    max-width: 200px; /* Maximum width for the button */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+
+  }

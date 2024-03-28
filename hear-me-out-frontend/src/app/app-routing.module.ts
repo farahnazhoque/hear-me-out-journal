@@ -20,6 +20,10 @@ const routes: Routes = [
     loadChildren: () => import('./folder/home/home.module').then(m => m.HomePageModule)
   },
   {
+    path: 'folder/voice-folder',
+    loadChildren: () => import('./folder/voice-folder/voice-folder.module').then( m => m.VoiceFolderPageModule)
+  },
+  {
     path: 'folder/:id',
     loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule)
   }

@@ -2,11 +2,17 @@ import { Component, OnInit, inject } from '@angular/core';
 import { RecordingData, VoiceRecorder } from 'capacitor-voice-recorder';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Router } from '@angular/router';
+import { ModalController, IonInput } from '@ionic/angular';
+import { FolderModalComponent } from './foldermodalcomponent';
+import { StorageService } from 'src/app/services/storage.service';
 
 interface AudioFile {
   name: string;
   duration: string;
   audioRef?: HTMLAudioElement; 
+}
+interface Folder {
+  name: string;
 }
 
 @Component({
@@ -20,16 +26,39 @@ export class JournalPage implements OnInit {
   startTime: number | null = null;
   durationInterval: any;
   audioRef?: HTMLAudioElement; 
-  private router = inject(Router);
+  folders: Folder[] = [];
 
+  constructor(private router: Router, private modalCtrl: ModalController, private storageService: StorageService) { }
 
-  constructor() { }
-
-  ngOnInit() {
+  async ngOnInit() {
     this.loadFiles();
+    this.loadFolders();
+
     VoiceRecorder.requestAudioRecordingPermission();
   }
 
+  async createNewFolder() {
+    const modal = await this.modalCtrl.create({
+      component: FolderModalComponent,
+    });
+  
+    await modal.present();
+    
+    const { data } = await modal.onWillDismiss();
+    
+    if (data?.folderName) {
+      this.folders.push({ name: data.folderName });
+      // Save the updated folders array to storage
+      await this.storageService.set('folders', this.folders);
+    }
+  }
+  
+  async loadFolders() {
+    const savedFolders = await this.storageService.get('folders');
+    if (savedFolders) {
+      this.folders = savedFolders;
+    }
+  }
   async loadFiles() {
     // Additional logic to read duration from file's metadata if available
     const files = await Filesystem.readdir({
@@ -136,7 +165,10 @@ export class JournalPage implements OnInit {
     this.storedFiles = this.storedFiles.filter(f => f.name !== file.name);
   }
 
-  navigateToVF() {
-    this.router.navigate(['../voice-folder']);
+  navigateToVF(title: string) {
+    this.router.navigate(['/folder/voice-folder'], { state: { title } }).catch(err => {
+      console.error('Navigation Error:', err);
+    });
   }
+  
 }

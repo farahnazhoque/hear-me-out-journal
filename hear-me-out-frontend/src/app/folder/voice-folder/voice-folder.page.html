@@ -1,13 +1,15 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>voice-folder</ion-title>
+    <ion-title size="large">{{ title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">voice-folder</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Content goes here -->
 </ion-content>
+
+<ion-footer>
+  <ion-button size="large" class="to-folder-button" (click)="backToJournal()">
+    <ion-icon name="arrow-back"></ion-icon> Go back to Voice Journal
+  </ion-button>
+</ion-footer>

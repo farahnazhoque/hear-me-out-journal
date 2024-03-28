@@ -1,0 +1,30 @@
+ion-content::part(background) {
+    background: #EDE1D8
+    ;
+
+}
+
+.to-folder-button {
+    --background: orange;
+    --background-hover: #da6048;
+    --background-activated: #da6048;
+    --background-focused: #da6048;
+  
+    --color: blue;
+    --border-radius: 20px;
+    --border-color: #000;
+    --border-style: solid;
+    --border-width: 2px;
+  
+    --box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+  
+    --ripple-color: deeppink;
+  
+    padding: 10px; /* Uniform padding */
+    width: auto; /* Adjusts width based on the text content */
+    min-width: 200px; /* Minimum width for the button */
+    max-width: 300px; /* Maximum width for the button */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+
+  }

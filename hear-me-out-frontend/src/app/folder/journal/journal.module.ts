@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { JournalPageRoutingModule } from './journal-routing.module';
 
 import { JournalPage } from './journal.page';
+import { FolderModalComponent } from './foldermodalcomponent';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { JournalPage } from './journal.page';
     IonicModule,
     JournalPageRoutingModule
   ],
-  declarations: [JournalPage]
+  declarations: [JournalPage, FolderModalComponent]
 })
 export class JournalPageModule {}
