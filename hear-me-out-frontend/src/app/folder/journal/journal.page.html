@@ -8,25 +8,19 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  
-
-  
-
   <!-- Horizontal scroll for dynamically created folder buttons -->
-  <!-- Horizontal scroll for dynamically created folder buttons -->
-<div class="horizontal-scroll">
-  <ion-button size="large" class="to-folder-button" (click)="navigateToVF('My Recording')">
-    My Recording <ion-icon slot="end" name="arrow-forward"></ion-icon>
-  </ion-button>
-  <ion-button *ngFor="let folder of folders" size="large" class="to-folder-button" (click)="navigateToVF(folder.name)"> 
-    {{ folder.name }} <ion-icon slot="end" name="arrow-forward"></ion-icon>
-  </ion-button>
-  <ion-button size="large" class="add-folder-button" (click)="createNewFolder()">
-    Add more <ion-icon slot="end" name="add"></ion-icon>
-  </ion-button>
-</div>
+  <div class="horizontal-scroll">
+    <ion-button size="large" class="to-folder-button" (click)="navigateToVF('My Recording')">
+      My Recording <ion-icon slot="end" name="arrow-forward"></ion-icon>
+    </ion-button>
+    <ion-button *ngFor="let folder of folders" size="large" class="to-folder-button" (click)="navigateToVF(folder.name)"> 
+      {{ folder.name }} <ion-icon slot="end" name="arrow-forward"></ion-icon>
+    </ion-button>
+    <ion-button size="large" class="add-folder-button" (click)="createNewFolder()">
+      Add more <ion-icon slot="end" name="add"></ion-icon>
+    </ion-button>
+  </div>
 
-  
   <ion-button (click)="startRecording()" expand="full" [disabled]="recording">Start</ion-button>
   <ion-button (click)="stopRecording()" expand="full" [disabled]="!recording">Stop</ion-button>
 
@@ -34,19 +28,4 @@
   <div *ngIf="recording">
     <p>Recording: {{ calculateDuration() }}</p>
   </div>
-
-  <ion-list>
-    <ion-item *ngFor="let file of storedFiles">
-      <ion-label>{{ file.name }} - Duration: {{ file.duration }}</ion-label>
-      <ion-button fill="clear" slot="end" (click)="playFile(file)">
-        <ion-icon name="play"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" slot="end" (click)="pauseFile(file)">
-        <ion-icon name="pause"></ion-icon>
-      </ion-button>
-      <ion-button fill="clear" slot="end" (click)="deleteFile(file)">
-        <ion-icon name="trash"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-list>
 </ion-content>

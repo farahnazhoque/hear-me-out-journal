@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
+import { AudioFile } from '../folder/journal/interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StorageService {
   private _storage: Storage | null = null;
@@ -12,32 +13,31 @@ export class StorageService {
   }
 
   async init() {
-    try {
-      const storage = await this.storage.create();
-      this._storage = storage;
-      console.log('Storage is initialized');
-    } catch (error) {
-      console.error('Error initializing storage', error);
-    }
+    const storage = await this.storage.create();
+    this._storage = storage;
   }
 
   public async set(key: string, value: any): Promise<void> {
-    try {
-      await this._storage?.set(key, value);
-      console.log(`Data stored for key ${key}:`, value);
-    } catch (error) {
-      console.error(`Error setting data for key ${key}`, error);
-    }
+    await this._storage?.set(key, value);
   }
 
   public async get(key: string): Promise<any> {
-    try {
-      const data = await this._storage?.get(key);
-      console.log(`Data retrieved for key ${key}:`, data);
-      return data;
-    } catch (error) {
-      console.error(`Error getting data for key ${key}`, error);
-      return null;
-    }
+    return await this._storage?.get(key);
   }
+
+  public async setFileInFolder(folderName: string, fileData: AudioFile): Promise<void> {
+    const folder = (await this._storage?.get(folderName)) || [];
+    folder.push(fileData);
+    await this._storage?.set(folderName, folder);
+  }
+  
+  public async getFilesInFolder(folderName: string): Promise<AudioFile[]> {
+    return (await this._storage?.get(folderName)) || [];
+  }
+
+  public async clearFolder(folderName: string): Promise<void> {
+    await this._storage?.set(folderName, []);
+  }
+  
+  
 }

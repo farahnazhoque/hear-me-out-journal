@@ -5,7 +5,21 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Content goes here -->
+  <ion-list>
+    <ion-item *ngFor="let file of files">
+      <ion-label>{{ file.name }} - Duration: {{ file.duration }}</ion-label>
+      <ion-button fill="clear" slot="end" (click)="playFile(file)">
+        <ion-icon name="play"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" slot="end" (click)="pauseFile(file)">
+        <ion-icon name="pause"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear" slot="end" (click)="deleteFile(file)">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+      
+    </ion-item>
+  </ion-list>
 </ion-content>
 
 <ion-footer>
