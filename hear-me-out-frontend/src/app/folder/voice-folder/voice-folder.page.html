@@ -17,6 +17,7 @@
       <ion-button fill="clear" slot="end" (click)="deleteFile(file)">
         <ion-icon name="trash"></ion-icon>
       </ion-button>
+
       
     </ion-item>
   </ion-list>
@@ -26,4 +27,6 @@
   <ion-button size="large" class="to-folder-button" (click)="backToJournal()">
     <ion-icon name="arrow-back"></ion-icon> Go back to Voice Journal
   </ion-button>
+  <ion-button (click)="clearAllFiles()">Clear All Files</ion-button>
+
 </ion-footer>

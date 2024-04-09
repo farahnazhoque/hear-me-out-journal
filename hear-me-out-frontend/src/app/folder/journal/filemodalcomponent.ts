@@ -39,10 +39,16 @@ dismiss() {
 }
 
 confirm() {
-    this.fileNameInput.getInputElement().then((inputElement: HTMLInputElement) => {
-        const fileName = inputElement.value;
-        const folderName = this.folderSelect.value;
-        this.modalCtrl.dismiss({ fileName, folderName });
-    });
+  this.fileNameInput.getInputElement().then((inputElement: HTMLInputElement) => {
+      let fileName = inputElement.value;
+      
+      // Ensure the file name ends with .mp3
+      if (!fileName.toLowerCase().endsWith('.mp3')) {
+          fileName += '.mp3';
+      }
+
+      const folderName = this.folderSelect.value;
+      this.modalCtrl.dismiss({ fileName, folderName });
+  });
 }
 }

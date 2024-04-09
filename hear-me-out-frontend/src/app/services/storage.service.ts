@@ -38,6 +38,27 @@ export class StorageService {
   public async clearFolder(folderName: string): Promise<void> {
     await this._storage?.set(folderName, []);
   }
+
+  public async logAllFiles(): Promise<void> {
+    if (!this._storage) {
+      console.warn('Storage has not been initialized.');
+      return;
+    }
+  
+    const keys = await this._storage.keys();
+    for (const key of keys) {
+      const files = await this._storage.get(key);
+      if (Array.isArray(files)) {
+        console.log(`Folder: ${key}, Files: `, files);
+      }
+    }
+  }
+
+  public async removeFileFromFolder(folderName: string, fileData: AudioFile): Promise<void> {
+    const folder = (await this._storage?.get(folderName)) || [];
+    const updatedFolder = folder.filter((f: { name: string; }) => f.name !== fileData.name);
+    await this._storage?.set(folderName, updatedFolder);
+  }
   
   
 }

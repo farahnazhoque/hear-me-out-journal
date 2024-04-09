@@ -90,6 +90,7 @@ export class JournalPage implements OnInit {
     clearInterval(this.durationInterval);
     VoiceRecorder.stopRecording().then(async (result: RecordingData) => {
       if (result.value && result.value.recordDataBase64) {
+        console.log('Audio data exists:', !!result.value.recordDataBase64.length); // Should log true if data is present
         const recordData = result.value.recordDataBase64;
         const fileName = `${new Date().getTime()}.mp3`;
         const duration = this.calculateDuration(true);
@@ -130,4 +131,5 @@ export class JournalPage implements OnInit {
       console.error('Navigation Error:', err);
     });
   }
+
 }
