@@ -21,11 +21,25 @@
     </ion-button>
   </div>
 
-  <ion-button (click)="startRecording()" expand="full" [disabled]="recording">Start</ion-button>
-  <ion-button (click)="stopRecording()" expand="full" [disabled]="!recording">Stop</ion-button>
-
+  
   <!-- Display the duration here -->
-  <div *ngIf="recording">
-    <p>Recording: {{ calculateDuration() }}</p>
+  <div class="recording-card"*ngIf="recording">
+    <ion-card class="ion-record">
+      <ion-card-header>
+        <ion-card-title>Recording</ion-card-title>
+        <ion-card-subtitle>
+          <p>Recording: {{ calculateDuration() }}</p>
+      </ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  </div>
+  <div class="custom-footer">
+    <button class="play-button" (click)="startRecording()" [disabled]="recording">
+      <ion-icon name="play"></ion-icon>
+    </button>
+    <button class="stop-button" (click)="stopRecording()" [disabled]="!recording">
+      <ion-icon name="square"></ion-icon>
+    </button>
   </div>
 </ion-content>
+

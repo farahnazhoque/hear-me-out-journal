@@ -16,6 +16,7 @@ interface VoiceFolderState {
 export class VoiceFolderPage implements OnInit {
   title: string = 'Default Title';
   files: AudioFile[] = [];
+  
 
   constructor(
     private router: Router,
@@ -27,6 +28,8 @@ export class VoiceFolderPage implements OnInit {
     const state = navigation?.extras.state as VoiceFolderState;
     this.title = state?.title;
     await this.loadFiles();
+    await this.logDirectoryUri(); // Call the method to log the directory URI
+
   }
 
   async loadFiles() {
@@ -66,43 +69,105 @@ export class VoiceFolderPage implements OnInit {
       console.error('Error clearing all files:', error);
     }
   }
-  
-  
-  async playFile(file: AudioFile) {
+
+  async logDirectoryUri() {
     try {
-      // Check if the file exists
-      await Filesystem.stat({
-        path: file.name,
-        directory: Directory.Data
+      const uri = await Filesystem.getUri({
+        directory: Directory.Data,
+        path: '' // Empty path to get the directory's URI
       });
-  
-      // Prepare the audio file for playback
-      if (!file.audioRef) {
-        const audioData = await Filesystem.readFile({ 
-          path: file.name, 
-          directory: Directory.Data 
-        });
-        file.audioRef = new Audio('data:audio/mp3;base64,' + audioData.data);
-        
-        // Event listeners for debugging
-        file.audioRef.addEventListener('canplay', () => {
-          console.log(`Audio ${file.name} is ready to play.`);
-        });
-        file.audioRef.addEventListener('error', (e) => {
-          console.error(`Error with audio ${file.name}:`, e);
-        });
-  
-        file.audioRef.load();
-      }
-  
-      // Reset playback time to 0 and play
-      file.audioRef.currentTime = 0;
-      file.audioRef.play();
+      console.log('Directory URI:', uri.uri);
     } catch (error) {
-      console.error('Error accessing or playing the audio file:', file.name, error);
+      console.error('Error getting directory URI:', error);
+    }
+  }
+
+  async logFilePaths() {
+    try {
+      const result = await Filesystem.readdir({
+        directory: Directory.Data,
+        path: this.title // Use the folder name as the path
+      });
+      console.log(`Files in Directory.Data/${this.title}:`, result.files);
+  
+      for (const fileName of result.files) {
+        const filePath = `${this.title}/${fileName}`;
+        const fileUri = await Filesystem.getUri({
+          directory: Directory.Data,
+          path: filePath
+        });
+        console.log(`File Path: ${filePath}, URI: ${fileUri.uri}`);
+      }
+    } catch (error) {
+      console.error('Error listing files and their URIs:', error);
     }
   }
   
+  
+  
+  async playFile(fileToPlay: AudioFile) {
+    try {
+      const file = this.files.find(f => f.name === fileToPlay.name);
+  
+      if (!file) {
+        console.log(`File not found in the list: ${fileToPlay.name}`);
+        return;
+      }
+  
+      const filePath = `${this.title}/${file.name}`;
+      console.log(`Attempting to play file: ${filePath}`); // Log the full file path
+  
+      const fileStat = await Filesystem.stat({
+        path: filePath,
+        directory: Directory.Data
+      }).catch(e => null);
+  
+      // Only attempt to read the file if it exists
+      if (fileStat) {
+        console.log(`Playing file: ${filePath}`);
+        // Prepare the audio file for playback
+        Filesystem.readFile({
+          path: filePath,
+          directory: Directory.Data
+        }).then(audioData => {
+          file.audioRef = new Audio('data:audio/mp3;base64,' + audioData.data);
+  
+          file.audioRef.addEventListener('canplay', () => {
+            console.log(`Audio ${filePath} is ready to play.`);
+            if (file.audioRef) {
+              file.audioRef.currentTime = 0;
+              file.audioRef.play();
+            }
+          });
+  
+          file.audioRef.addEventListener('error', (e) => {
+            console.error(`Error with audio ${filePath}:`, e);
+          });
+  
+          file.audioRef.load();
+        })
+        .catch(error => {
+          console.error('Error accessing or playing the audio file:', filePath, error);
+        });
+      } else {
+        console.log(`File does not exist and cannot be played: ${filePath}`);
+      }
+    } catch (error) {
+      console.error('Error playing file:', error);
+    }
+  }
+  
+  async listFiles() {
+    try {
+      const result = await Filesystem.readdir({
+        directory: Directory.Data,
+        path: ''
+      });
+      console.log('Files in Directory.Data:', result.files);
+    } catch (error) {
+      console.error('Error listing files:', error);
+    }
+  }
   
   
   async deleteFile(fileToDelete: AudioFile) {

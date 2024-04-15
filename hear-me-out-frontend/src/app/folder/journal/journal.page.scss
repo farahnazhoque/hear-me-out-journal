@@ -39,7 +39,7 @@ ion-menu-button {
     --background-activated: #da6048;
     --background-focused: #da6048;
   
-    --color: blue;
+    --color: black;
     --border-radius: 20px;
     --border-color: #000;
     --border-style: solid;
@@ -54,7 +54,8 @@ ion-menu-button {
     min-width: 100px; /* Minimum width for the button */
     max-width: 200px; /* Maximum width for the button */
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px;
+    font-size: 20px;
+    height: 80px;
 
   }
   
@@ -81,7 +82,7 @@ ion-menu-button {
     --background-activated: orange;
     --background-focused: orange;
   
-    --color: blue;
+    --color: black;
     --border-radius: 20px;
     --border-color: #000;
     --border-style: solid;
@@ -93,9 +94,62 @@ ion-menu-button {
   
     padding: 2px; /* Uniform padding */
     width: auto; /* Adjusts width based on the text content */
-    min-width: 100px; /* Minimum width for the button */
-    max-width: 200px; /* Maximum width for the button */
+    min-width: 150px; /* Minimum width for the button */
+    max-width: 250px; /* Maximum width for the button */
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px;
+    font-size: 20px;
+    height: 80px;
+
+  }
+
+  .custom-footer {
+    height: 65px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #e5838c;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: #000 solid 2px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+
+  }
+  
+  .play-button, .stop-button {
+    background-color: #7497d4;
+    color: black;
+    border: black solid 2px;
+    padding: 15px 15px;
+    border-radius: 20px;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+
+  }
+  
+  .play-button[disabled], .stop-button[disabled] {
+    background-color: #b3d4fc;
+    color: grey;
+    border: grey solid 2px;
+
+  }
+  
+  ion-content {
+    --padding-bottom: 60px; /* Adjust based on the height of your custom footer */
+  }
+  
+
+  .recording-card {
+    position: fixed;
+    bottom: 70px;
+    left: 0;
+    right: 0;
+  }
+
+  .ion-record {
+    background-color: orange;
+    border: black solid 2px;
 
   }
