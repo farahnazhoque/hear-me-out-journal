@@ -5,6 +5,8 @@ export interface AudioFile {
     folder?: string;  // Assuming you've added 'folder' to the interface
     audioRef?: HTMLAudioElement;
     file?: File;
+    date: string;
+    time: string;
   }
   
   

@@ -9,7 +9,7 @@ const routes: Routes = [
     component: FolderPage
   },
   {
-    path: 'journal',
+    path: 'voice-journal',
     loadChildren: () => import('./journal/journal.module').then( m => m.JournalPageModule)
   },
   {
@@ -23,6 +23,10 @@ const routes: Routes = [
   {
     path: 'voice-folder',
     loadChildren: () => import('./voice-folder/voice-folder.module').then( m => m.VoiceFolderPageModule)
+  },
+  {
+    path: 'written-journal',
+    loadChildren: () => import('./written-journal/written-journal.module').then( m => m.WrittenJournalPageModule)
   }
   
 ];

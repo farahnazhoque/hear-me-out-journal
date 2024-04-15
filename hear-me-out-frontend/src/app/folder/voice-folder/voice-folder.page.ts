@@ -23,6 +23,8 @@ export class VoiceFolderPage implements OnInit {
     private storageService: StorageService
   ) {}
 
+  
+
   async ngOnInit() {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state as VoiceFolderState;
@@ -39,36 +41,35 @@ export class VoiceFolderPage implements OnInit {
 
   async clearAllFiles() {
     try {
-      // Loop through all files
       for (const file of this.files) {
-        // Check if the file exists before deleting
-        const fileStat = await Filesystem.stat({
-          path: file.name,
-          directory: Directory.Data
-        }).catch(e => null); // Catch and return null if an error occurs
+        const filePath = `${this.title}/${file.name}`; // Consistent file path
   
-        // Only attempt to delete the file if it exists
+        const fileStat = await Filesystem.stat({
+          path: filePath,
+          directory: Directory.Data
+        }).catch(e => null);
+  
         if (fileStat) {
           await Filesystem.deleteFile({
-            path: file.name,
+            path: filePath,
             directory: Directory.Data
           });
         } else {
-          console.log(`File does not exist and cannot be deleted: ${file.name}`);
+          console.log(`File does not exist and cannot be deleted: ${filePath}`);
         }
       }
-    
-      // Clear the files array and update the storage if any deletions occurred
+  
       if (this.files.length) {
         this.files = [];
         await this.storageService.clearFolder(this.title);
       }
-    
+  
       console.log(`All files in folder ${this.title} have been cleared or verified as non-existent.`);
     } catch (error) {
       console.error('Error clearing all files:', error);
     }
   }
+  
 
   async logDirectoryUri() {
     try {
@@ -115,40 +116,40 @@ export class VoiceFolderPage implements OnInit {
       }
   
       const filePath = `${this.title}/${file.name}`;
-      console.log(`Attempting to play file: ${filePath}`); // Log the full file path
+      console.log(`Attempting to play file: ${filePath}`);
   
       const fileStat = await Filesystem.stat({
         path: filePath,
         directory: Directory.Data
       }).catch(e => null);
   
-      // Only attempt to read the file if it exists
       if (fileStat) {
         console.log(`Playing file: ${filePath}`);
-        // Prepare the audio file for playback
-        Filesystem.readFile({
+        const audioData = await Filesystem.readFile({
           path: filePath,
           directory: Directory.Data
-        }).then(audioData => {
-          file.audioRef = new Audio('data:audio/mp3;base64,' + audioData.data);
-  
-          file.audioRef.addEventListener('canplay', () => {
-            console.log(`Audio ${filePath} is ready to play.`);
-            if (file.audioRef) {
-              file.audioRef.currentTime = 0;
-              file.audioRef.play();
-            }
-          });
-  
-          file.audioRef.addEventListener('error', (e) => {
-            console.error(`Error with audio ${filePath}:`, e);
-          });
-  
-          file.audioRef.load();
-        })
-        .catch(error => {
-          console.error('Error accessing or playing the audio file:', filePath, error);
         });
+  
+        if (!file.audioRef) {
+          file.audioRef = new Audio(); // Ensure audioRef is initialized
+        }
+        
+        file.audioRef.src = 'data:audio/mp3;base64,' + audioData.data;
+        file.audioRef.load(); // Preload the audio data
+        
+        file.audioRef.addEventListener('canplay', async () => {
+          try {
+            await file.audioRef?.play(); // Safe call using optional chaining
+            console.log(`Audio ${filePath} is ready to play.`);
+          } catch (error) {
+            console.error(`Error during auto-play`);
+          }
+        });
+  
+        file.audioRef.addEventListener('error', e => {
+          console.error(`Error with audio ${filePath}:`, e);
+        });
+  
       } else {
         console.log(`File does not exist and cannot be played: ${filePath}`);
       }
@@ -156,6 +157,7 @@ export class VoiceFolderPage implements OnInit {
       console.error('Error playing file:', error);
     }
   }
+  
   
   async listFiles() {
     try {
@@ -172,46 +174,46 @@ export class VoiceFolderPage implements OnInit {
   
   async deleteFile(fileToDelete: AudioFile) {
     try {
-      // Find the actual file in the files array that matches the name of the file to delete
-      const file = this.files.find(f => f.name === fileToDelete.name);
-  
-      if (!file) {
-        console.log(`File not found in the list: ${fileToDelete.name}`);
-        return; // If the file isn't found in the array, exit the function
-      }
-  
-      // Proceed with the deletion from the filesystem
-      console.log(`Deleting file: ${file.name}`);
-      Filesystem.deleteFile({
-        path: file.name,
+      const filePath = `${this.title}/${fileToDelete.name}`; // Consistent file path
+      const fileStat = await Filesystem.stat({
+        path: filePath,
         directory: Directory.Data
-      })
-      .then(deleteResult => {
-        console.log('Delete result:', deleteResult);
+      }).catch(e => null);
+  
+      if (fileStat) {
+        await Filesystem.deleteFile({
+          path: filePath,
+          directory: Directory.Data
+        });
         this.files = this.files.filter(file => file.name !== fileToDelete.name);
-        this.storageService.removeFileFromFolder(this.title, fileToDelete);
-        console.log(`File deleted: ${fileToDelete.name}`);
-      })
-      .catch(error => {
-        console.error('Error deleting file:', error);
-      });
-      
-      // Remove the file from the UI list
-      this.files = this.files.filter(f => f.name !== file.name);
-  
-      // Update the storage to reflect the deletion
-      await this.storageService.removeFileFromFolder(this.title, file);
-  
-      console.log(`File deleted: ${file.name}`);
+        await this.storageService.removeFileFromFolder(this.title, fileToDelete);
+        console.log(`File deleted: ${filePath}`);
+      } else {
+        console.log(`File does not exist and cannot be deleted: ${filePath}`);
+      }
     } catch (error) {
       console.error('Error deleting file:', error);
     }
   }
   
   
-  pauseFile(file: AudioFile) {
-    file.audioRef?.pause();
+  pauseFile(fileToPause: AudioFile) {
+    const filePath = `${this.title}/${fileToPause.name}`; // Consistent file path
+    const file = this.files.find(f => f.name === fileToPause.name);
+  
+    if (!file || !file.audioRef) {
+      console.error(`File not found or no audio loaded for: ${filePath}`);
+      return;
+    }
+  
+    if (!file.audioRef.paused) {
+      file.audioRef.pause();
+      console.log(`Audio paused for file: ${filePath}`);
+    } else {
+      console.log(`Audio already paused for file: ${filePath}`);
+    }
   }
+  
 
 
   

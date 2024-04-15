@@ -7,6 +7,8 @@ import { FolderModalComponent } from './foldermodalcomponent';
 import { StorageService } from 'src/app/services/storage.service';
 import { FileModalComponent } from './filemodalcomponent';
 import { Folder } from './interface';
+import { AudioFile } from './interface';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-journal',
@@ -18,38 +20,28 @@ export class JournalPage implements OnInit {
   startTime: number | null = null;
   durationInterval: any;
   folders: Folder[] = [];
+  files: AudioFile[] = [];  // Array to store file information
 
-  constructor(private router: Router, private modalCtrl: ModalController, private storageService: StorageService) { }
+
+  constructor(private router: Router, private modalCtrl: ModalController, private storageService: StorageService, private cdr: ChangeDetectorRef,
+  ) { 
+    this.storageService.filesChanged.subscribe(() => {
+      this.loadFiles();
+      this.cdr.detectChanges();
+    });
+  }
 
   async ngOnInit() {
     await this.loadFolders();
     VoiceRecorder.requestAudioRecordingPermission();
+    await this.loadFiles(); // Load files initially
+
   }
 
-  async addFilesToFolder(fileName: string, duration: string) {
-    const modal = await this.modalCtrl.create({
-      component: FileModalComponent,
-      componentProps: {
-        folders: this.folders
-      }
-    });
-  
-    await modal.present();
-  
-    const { data } = await modal.onWillDismiss();
-  
-    if (data?.fileName && data?.folderName) {
-      const fileData = {
-        name: data.fileName,
-        duration: duration,
-        folder: data.folderName,
-      };
-  
-      await this.storageService.setFileInFolder(data.folderName, fileData);
-      console.log(`File added to folder ${data.folderName}:`, fileData);
-    }
+  async loadFiles() {
+    this.files = await this.storageService.getAllFiles(); // Assuming this fetches all files across folders
   }
-  
+
 
   async createNewFolder() {
     const modal = await this.modalCtrl.create({
@@ -75,6 +67,14 @@ export class JournalPage implements OnInit {
     }
   }
 
+  async clearStorage() {
+    await this.storageService.clearAllData(); // Clear the storage
+    this.files = []; // Clear the files array to update the UI
+    this.folders = []; // Optionally clear the folders if they are also managed
+    this.cdr.detectChanges(); // Manually trigger change detection to update the view
+  }
+  
+
   startRecording() {
     if (this.recording) return;
 
@@ -89,25 +89,67 @@ export class JournalPage implements OnInit {
 
     clearInterval(this.durationInterval);
     VoiceRecorder.stopRecording().then(async (result: RecordingData) => {
-      if (result.value && result.value.recordDataBase64) {
-        console.log('Audio data exists:', !!result.value.recordDataBase64.length); // Should log true if data is present
-        const recordData = result.value.recordDataBase64;
-        const fileName = `${new Date().getTime()}.mp3`;
-        const duration = this.calculateDuration(true);
+        if (result.value && result.value.recordDataBase64) {
+            console.log('Audio data exists:', !!result.value.recordDataBase64.length);
+            const recordData = result.value.recordDataBase64;
 
-        await Filesystem.writeFile({
-          path: fileName,
-          data: recordData,
-          directory: Directory.Data
-        });
+            // Open the file modal to get file name and folder
+            const modal = await this.modalCtrl.create({
+                component: FileModalComponent,
+                componentProps: { folders: this.folders }
+            });
 
-        this.addFilesToFolder(fileName, duration);
+            await modal.present();
 
-        this.recording = false;
-        this.startTime = null;
-      }
+            const { data } = await modal.onWillDismiss();
+
+            if (data?.fileName && data?.folderName) {
+                const fileName = data.fileName; // Use the file name from the modal
+                const duration = this.calculateDuration(true);
+
+                // Write the file using the fileName from the modal
+                await Filesystem.writeFile({
+                    path: `${data.folderName}/${fileName}`, // Ensure path includes folder
+                    data: recordData,
+                    directory: Directory.Data
+                });
+
+                console.log(`File written to: ${data.folderName}/${fileName}`);
+
+                // Add file to the folder after recording
+                this.addFilesToFolder(fileName, duration, data.folderName);
+
+                // Reset recording state
+                this.recording = false;
+                this.startTime = null;
+            }
+        }
     });
-  }
+}
+
+addFilesToFolder(fileName: string, duration: string, folderName: string) {
+  const fileData: AudioFile = {
+    name: fileName,
+    duration: duration,
+    date: new Date().toLocaleDateString(),  // Assuming current date for simplicity
+    time: new Date().toLocaleTimeString(),  // Assuming current time for simplicity
+    folder: folderName,
+  };
+
+  this.storageService.setFileInFolder(folderName, fileData);
+  this.files.push(fileData);  // Add to local array for display
+  console.log(`File added to folder ${folderName}:`, fileData);
+}
+
+
+async getFullPath(fileName: string): Promise<string> {
+    const uri = await Filesystem.getUri({
+        directory: Directory.Data,
+        path: fileName
+    });
+    return uri.uri; // This will return the full URI where the file is stored
+}
+
 
   calculateDuration(finalize = false): string {
     if (!this.startTime) return '0:00';
@@ -132,4 +174,10 @@ export class JournalPage implements OnInit {
     });
   }
 
+  navigateToWrittenJournal(file: any) {
+    this.router.navigate(['/folder/written-journal'], { state: { file: file } });
+  }
+  
+
 }
+

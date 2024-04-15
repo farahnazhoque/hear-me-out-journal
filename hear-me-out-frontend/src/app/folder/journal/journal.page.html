@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
   <!-- Horizontal scroll for dynamically created folder buttons -->
   <div class="horizontal-scroll">
     <ion-button size="large" class="to-folder-button" (click)="navigateToVF('My Recording')">
@@ -21,18 +21,33 @@
     </ion-button>
   </div>
 
-  
-  <!-- Display the duration here -->
-  <div class="recording-card"*ngIf="recording">
+  <!-- Display files with vertical scrolling -->
+  <ion-list class="display-files">
+    <ion-card *ngFor="let file of files" (click)="navigateToWrittenJournal(file)">
+      <ion-card-header>
+        <ion-card-title>{{ file.name }}</ion-card-title>
+        <ion-card-subtitle>{{ file.folder }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        Date: {{ file.date }}<br>
+        Time: {{ file.time }}
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <!-- Recording status display -->
+  <div class="recording-card" *ngIf="recording">
     <ion-card class="ion-record">
       <ion-card-header>
         <ion-card-title>Recording</ion-card-title>
-        <ion-card-subtitle>
-          <p>Recording: {{ calculateDuration() }}</p>
-      </ion-card-subtitle>
       </ion-card-header>
+      <ion-card-subtitle>
+        <p>Duration: {{ calculateDuration() }}</p>
+      </ion-card-subtitle>
     </ion-card>
   </div>
+
+  <!-- Controls for recording -->
   <div class="custom-footer">
     <button class="play-button" (click)="startRecording()" [disabled]="recording">
       <ion-icon name="play"></ion-icon>
@@ -40,6 +55,8 @@
     <button class="stop-button" (click)="stopRecording()" [disabled]="!recording">
       <ion-icon name="square"></ion-icon>
     </button>
+    <button class="trash-button" (click)="clearStorage()">
+      <ion-icon name="trash"></ion-icon>
+    </button>
   </div>
 </ion-content>
-
