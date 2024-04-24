@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { AudioFile } from '../folder/journal/interface';
 
@@ -7,6 +7,8 @@ import { AudioFile } from '../folder/journal/interface';
 })
 export class StorageService {
   private _storage: Storage | null = null;
+  filesChanged = new EventEmitter<void>();
+
 
   constructor(private storage: Storage) {
     this.init();
@@ -58,7 +60,26 @@ export class StorageService {
     const folder = (await this._storage?.get(folderName)) || [];
     const updatedFolder = folder.filter((f: { name: string; }) => f.name !== fileData.name);
     await this._storage?.set(folderName, updatedFolder);
+    this.filesChanged.emit();
   }
   
+  // In StorageService
+  public async getAllFiles(): Promise<AudioFile[]> {
+    const keys = await this._storage?.keys();
+    let allFiles: AudioFile[] = [];
+    if (keys) {
+      for (const key of keys) {
+        const files = await this.getFilesInFolder(key);
+        allFiles = allFiles.concat(files);
+      }
+    }
+    return allFiles;
+  }
+
+  public async clearAllData(): Promise<void> {
+    await this._storage?.clear();
+    this.filesChanged.emit(); // Emit to update any listeners
+    console.log('All storage data has been cleared.');
+  }
   
 }

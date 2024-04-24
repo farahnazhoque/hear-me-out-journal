@@ -1,10 +1,16 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+
+
 <ion-content>
-  <div style="display: flex; align-items: center;">
-    <img src="../../assets/Hear.png" alt="icon" style="height: 150px; width: 150px;"> 
-    <ion-title class="title">Create Your Account!</ion-title>
+  <div style="display: flex; justify-content: center;">
+    <img src="../../assets/Hear.png" alt="icon" class="icon-image" style="padding-top: 50%; margin-bottom:0%; z-index: 0;">
   </div>
   <div class="wrapper">
-    <ion-textarea class="input-box" label="Please enter your preferred First Name" labelPlacement="floating" fill="solid" placeholder="Enter text" [(ngModel)]="userName"></ion-textarea>
-    <ion-button class="save-button" expand="block" (click)="saveName()" [disabled]="!userName.trim()">Save</ion-button>
+    <ion-text class="first-name-text">First Name</ion-text>
+    <ion-textarea class="input-box" fill="solid" placeholder="Enter text" [(ngModel)]="userName"></ion-textarea>
+    <button class="save-button" (click)="saveName()" [disabled]="!userName.trim()">Save</button>
+
   </div>
 </ion-content>

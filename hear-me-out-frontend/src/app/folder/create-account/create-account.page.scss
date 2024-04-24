@@ -1,3 +1,5 @@
+// <uniquifier>: Use a unique and descriptive class name
+// <weight>: Use a value from 200 to 900
 
 ion-content::part(background) {
     background: #EDE1D8
@@ -11,35 +13,55 @@ ion-content::part(background) {
     justify-content: center;
   
     padding: 10%; /* Add padding inside the wrapper */
-    padding-top: 40%;
+    padding-top: 2%;
     margin: 0 auto; /* Center the wrapper horizontally */
     max-width: 100%; /* Limit maximum width and center it */
 
 
   }
 
-.title {
-    font-size: 22px;
-    font-family:Arial, Helvetica, sans-serif;
+
+.first-name-text {
+    font-size: 18px;
+    font-family: "Source Code Pro", monospace;
+    font-style: italic;
+    font-weight: 850;
+    padding-bottom: 5%;
 }
 
 .wrapper .input-box {
     --background: #e5838c; /* Change #ffcccb to whatever color you prefer */
-    color: white;
+    color: black;
+    font-weight: 600;
     --padding-start: 15px;
     --padding-end: 15px;
-    --padding-top: 15px;
-    --border-radius: 2px;
-    border: 2px solid black; /* Add black solid border */
+    --border-radius: 10px;
+    border: 5px solid black; /* Add black solid border */
+    border-radius: 15px;
+    font-family: "Source Code Pro", monospace;
+    z-index: 20;
+    font-size: 18px;
+
 }
 
-.wrapper .save-button {
-    margin-top: 20px; /* Add margin to the top */
-    width: 40%;
-    border-radius: 15px; /* Increase border radius for a curved border */
-    border:3px solid black; /* Border thickness and color */
-}
+.save-button {
+    margin-top: 20px;
+    width: 50%;
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: 5px solid black;
+    font-family: "Source Code Pro", monospace;
+    background-color: #96B0ED; /* Light purple color */
+    color: black; /* Text color */
+    font-size: 18px;
+    cursor: pointer;
+  }
 
+  .save-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    color: rgb(63, 61, 61);
+  }
 .transparent-header {
     --background: transparent; /* Set the background to transparent */
 }
